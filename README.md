@@ -21,6 +21,6 @@ The Excel output was designed to seamlessly integrate with **Power BI dashboards
 3. The output Excel file `output.xlsx` will be generated in the current directory.
 
 ## Example Output
-| dateAndTime       | PasswordAuthOrNoneAuth     | username       | attackerIp          |  attackerCountry | attackerCity |
-|------------|----------------|---------------|---------------|----|----| 
-| Aug 20 20:15:56 | password    | root | 165.22.4.32 | United States |   North Bergen | 
+| dateAndTime   | result | passwordAuthOrNoneAuth     | username       | attackerIp          |  attackerCountry | attackerCity |
+|------------|-------|---------|---------------|---------------|----|----| 
+| Aug 20 20:15:56 | Failed |  password    | root | 165.22.4.32 | United States |   North Bergen | 
