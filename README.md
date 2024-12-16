@@ -8,7 +8,7 @@ The Excel output was designed to seamlessly integrate with **Power BI dashboards
 ## Features  
 - Converts SSH logs into structured Excel spreadsheets.  
 - Geolocates IP addresses, providing **country** and **city** details.  
-- **Waits for the user to change VPS servers** when rate-limiting occurs for the geolocation service, ensuring smooth processing of IP addresses.
+- **Waits for the user to change VPN servers** when rate-limiting occurs for the geolocation service, ensuring smooth processing of IP addresses.
 - Saves already resolved IP addresses as a caching mechanism and make the process faster/
 
 ## Requirements  
