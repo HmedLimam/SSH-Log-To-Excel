@@ -41,7 +41,6 @@ print(Fore.LIGHTGREEN_EX, f"[+] Input file: {input_file}", Style.RESET_ALL)
 
 data = []
 old_last_reached_attempt = last_reached_attempt = 0
-# simulated_exception = False
 
 try:
     with open("cached_ips.pkl", "rb") as file:
@@ -59,7 +58,8 @@ with open(input_file) as file:
             print(f"Current Line: {_+1 + old_last_reached_attempt} - Current Progress: {((_+1 + old_last_reached_attempt) / number_of_lines) * 100:.2f}%", end='\r', flush=True)
             hostname = line.split(" ")[3]
             dateAndTime = line.split(f" {hostname}")[0]
-            passwordAuthOrNoneAuth = line.split("Failed ")[1].split(" ")[0]
+            result = re.search(r"sshd\[\d+\]: (\w+)", line).group(1)
+            passwordAuthOrNoneAuth = line.split(f"{result} ")[1].split(" ")[0]
             username = line.split("for ")[1]
             if "invalid user" in username:
                 username = line.split("for invalid user ")[1]
@@ -67,10 +67,6 @@ with open(input_file) as file:
             attackerIp = line.split("from ")[1].split(" ")[0]
 
             try:
-                # For testing
-                # if _ == 30 and not simulated_exception:
-                #     simulated_exception = True
-                #     raise Exception
                 attacker_info = next((entry for entry in cached_ips if entry["ip"] == attackerIp), None)
                 if attacker_info:
                     attackerCountry = attacker_info["country"]
@@ -83,6 +79,7 @@ with open(input_file) as file:
 
                 data.append({
                     'dateAndTime': dateAndTime,
+                    'result': result,
                     'passwordAuthOrNoneAuth': passwordAuthOrNoneAuth,
                     'username': username,
                     'attackerIp': attackerIp,
