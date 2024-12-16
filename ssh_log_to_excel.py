@@ -59,7 +59,7 @@ with open(input_file) as file:
             hostname = line.split(" ")[3]
             dateAndTime = line.split(f" {hostname}")[0]
             result = re.search(r"sshd\[\d+\]: (\w+)", line).group(1)
-            passwordAuthOrNoneAuth = line.split(f"{result} ")[1].split(" ")[0]
+            authType = line.split(f"{result} ")[1].split(" ")[0]
             username = line.split("for ")[1]
             if "invalid user" in username:
                 username = line.split("for invalid user ")[1]
@@ -80,7 +80,7 @@ with open(input_file) as file:
                 data.append({
                     'dateAndTime': dateAndTime,
                     'result': result,
-                    'passwordAuthOrNoneAuth': passwordAuthOrNoneAuth,
+                    'authType': authType,
                     'username': username,
                     'attackerIp': attackerIp,
                     'attackerCountry': attackerCountry,
