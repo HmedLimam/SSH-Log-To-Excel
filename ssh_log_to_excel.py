@@ -1,7 +1,7 @@
 """
     ssh_log_to_excel.py
 
-    Transforms SSH log files into an Excel spreadsheet.
+    Transforms SSH log file into an Excel spreadsheet.
     Geolocates IP addresses, providing country and city.
 
     Created by ahmed.ovh.
@@ -19,25 +19,50 @@ from colorama import Fore, Style, init as init_colorama
 import argparse
 import os
 import re
+import subprocess
 
 init_colorama()
 parser = argparse.ArgumentParser(
-    description="Parse SSH log attempts and save them to an Excel file."
+    description="Parse SSH log file and save them to an Excel file with IP Geolocation."
 )
 
-parser.add_argument('-i', "--input", help="Specify the text file containing SSH attempts.", required=True)
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument(
+    '-i', "--input",
+    help="Specify the text file containing SSH attempts."
+)
+group.add_argument(
+    '-g', "--generate",
+    action="store_true",
+    help="Generate a new SSH log file."
+)
+
 parser.add_argument('-o', "--output", help="Specify the file name where the split data will be saved in table format.", required=True)
 
 args = parser.parse_args()
 
-if not os.path.isfile(args.input):
-    print(f"Error: The input file '{args.input}' does not exist in the current directory.")
-    exit(1)
+input_file = ""
 
-input_file = args.input
+if args.generate:
+    print("Generating the SSH log file...", end="\r", flush=True)
+    try:
+        subprocess.run('journalctl -u ssh > ssh_log_file', shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred: {e}")
+        exit(1)
+
+    print("Log file generated successfully.")
+    generated_file_name = "ssh_log_file"
+    args.input = generated_file_name
+
+if args.input:
+    input_file = args.input
+    if not os.path.isfile(args.input):
+        print(f"Error: The input file '{args.input}' does not exist in the current directory.")
+        exit(1)
+    print(Fore.LIGHTGREEN_EX, f"[+] Input file: {input_file}", Style.RESET_ALL)
+
 output_file = args.output
-
-print(Fore.LIGHTGREEN_EX, f"[+] Input file: {input_file}", Style.RESET_ALL)
 
 data = []
 old_last_reached_attempt = last_reached_attempt = 0
